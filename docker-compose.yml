@@ -1,0 +1,49 @@
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: star_crawler
+      MYSQL_USER: star
+      MYSQL_PASSWORD: star
+    ports:
+      - '3307:3306'
+    volumes:
+      - star_crawler_mysql:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', '127.0.0.1', '-uroot', '-proot']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      TZ: Asia/Tehran
+      HOST: 0.0.0.0
+      PORT: 3333
+      NODE_ENV: production
+      APP_KEY: ${APP_KEY:-starcrawlerappkey32charsminimum!!}
+      LOG_LEVEL: info
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: star
+      DB_PASSWORD: star
+      DB_DATABASE: star_crawler
+      START_CRON: ${START_CRON:-1}
+      EPSS_CRON: ${EPSS_CRON:-0 16 * * *}
+      EPSS_CSV_URL: https://epss.empiricalsecurity.com/epss_scores-current.csv.gz
+      EPSS_CACHE_DIR: tmp/epss-cache
+    ports:
+      - '3333:3333'
+    volumes:
+      - star_crawler_cache:/home/node/app/tmp/epss-cache
+
+volumes:
+  star_crawler_mysql:
+  star_crawler_cache:
