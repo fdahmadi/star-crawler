@@ -173,6 +173,7 @@ Also accepts:
 | `epss` | EPSS score from CSV |
 | `percentile` | Percentile from CSV |
 | `scoreDate` | Snapshot date from CSV header (`score_date`) |
+| `changedAt` | Null until `epss`/`percentile` change; then that sync's `scoreDate` |
 | `createdAt` / `updatedAt` | DB timestamps |
 
 ---

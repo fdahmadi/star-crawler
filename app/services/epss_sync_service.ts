@@ -161,11 +161,18 @@ export default class EpssSyncService {
         bindings.push(row.cve, row.epss, row.percentile, row.scoreDate, now, now)
       }
 
+      // changed_at stays null on insert; on update it becomes score_date only when
+      // epss or percentile differ from the existing row (evaluate before overwriting).
       await db.rawQuery(
         `
         INSERT INTO epss_scores (cve, epss, percentile, score_date, created_at, updated_at)
         VALUES ${placeholders}
         ON DUPLICATE KEY UPDATE
+          changed_at = IF(
+            epss <> VALUES(epss) OR percentile <> VALUES(percentile),
+            VALUES(score_date),
+            changed_at
+          ),
           epss = VALUES(epss),
           percentile = VALUES(percentile),
           score_date = VALUES(score_date),

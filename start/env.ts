@@ -12,6 +12,8 @@ export default await Env.create(new URL('../', import.meta.url), {
   DB_USER: Env.schema.string(),
   DB_PASSWORD: Env.schema.string.optional(),
   DB_DATABASE: Env.schema.string(),
+  /** Optional unix socket (used when host Docker port publish is unavailable). */
+  DB_SOCKET: Env.schema.string.optional(),
 
   /**
    * Set to "1" to enable the daily EPSS sync cron inside the web process.

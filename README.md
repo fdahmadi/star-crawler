@@ -60,6 +60,7 @@ Response fields match the CSV (+ timestamps):
 - `epss`
 - `percentile`
 - `scoreDate` (from CSV header `score_date`)
+- `changedAt` (null until `epss`/`percentile` change on a later sync; then set to that day's `scoreDate`)
 
 ## Daily schedule
 

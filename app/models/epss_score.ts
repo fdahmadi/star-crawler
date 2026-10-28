@@ -19,6 +19,10 @@ export default class EpssScore extends BaseModel {
   @column()
   declare scoreDate: string
 
+  /** Last FIRST score_date when epss/percentile actually changed; null until first change. */
+  @column()
+  declare changedAt: string | null
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
